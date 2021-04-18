@@ -37,3 +37,14 @@ test.serial.cb('Post api/targets', function (t) {
     t.end()
   }))
 })
+
+test.serial.cb('GET api/targets', function (t) {
+  var url = '/api/targets'
+  servertest(server(), url, { encoding: 'json' }, function (err, res) {
+    t.falsy(err, 'no error')
+
+    t.is(res.statusCode, 200, 'correct statusCode')
+    t.is(res.body.status, 'OK', 'status is ok')
+    t.end()
+  })
+})
