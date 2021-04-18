@@ -78,3 +78,22 @@ test.serial.cb('Post api/target/:id', function (t) {
     t.end()
   }))
 })
+
+test.serial.cb('Post route', function (t) {
+  var url = '/route'
+  // servertest is a duplex stream when posting data
+  var serverStream = servertest(server(), url, { method: 'POST', headers: { ...{ 'content-type': 'application/json' } } })
+
+  // pipe data to the POST request
+  fs.createReadStream(path.join(__dirname, 'visitorInfo.json')).pipe(serverStream)
+
+  // pipe data from the response
+  serverStream.pipe(bl(function (err, res) {
+    res = JSON.parse(res)
+    console.log(res)
+    t.falsy(err, 'no error')
+
+    t.is(res.status, 'OK', 'status is ok')
+    t.end()
+  }))
+})
